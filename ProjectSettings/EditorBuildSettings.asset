@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/NatureWalkScene.unity
+    guid: e7064a60182851748b1a0fc5cc5ee72b
   m_configObjects: {}
