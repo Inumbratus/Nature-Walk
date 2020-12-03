@@ -13,6 +13,10 @@ public class BreathingVis : MonoBehaviour
 
     private RectTransform rtL;
     private RectTransform rtR;
+    private RectTransform rt;
+
+    private Quaternion OldRotation;
+
 
     // Breathing Sound
     AudioSource audioSource;
@@ -35,6 +39,9 @@ public class BreathingVis : MonoBehaviour
     {
         rtL = VisL.GetComponent<RectTransform>();
         rtR = VisR.GetComponent<RectTransform>();
+        rt = gameObject.GetComponent<RectTransform>();
+        OldRotation = rt.localRotation;
+
 
         if (gameObject.GetComponent<AudioSource>()) {
             audioSource = gameObject.GetComponent<AudioSource>();
@@ -48,6 +55,7 @@ public class BreathingVis : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         // Each stage of breathing
         switch (stage)
         {
@@ -66,7 +74,6 @@ public class BreathingVis : MonoBehaviour
                 else {
                     currentTimer = breathInTime;
                     started = true;
-                    print(stage);
                     audioSource.PlayOneShot(breathInSound);
                 }
 
@@ -85,7 +92,6 @@ public class BreathingVis : MonoBehaviour
                 else {
                     currentTimer = delay;
                     started = true;
-                    print(stage);
                 }
 
                 break;
@@ -104,7 +110,6 @@ public class BreathingVis : MonoBehaviour
                 else {
                     currentTimer = breathOutTime;
                     started = true;
-                    print(stage);
                     audioSource.PlayOneShot(breathOutSound);
                 }
 
@@ -118,12 +123,13 @@ public class BreathingVis : MonoBehaviour
                     if (currentTimer <= 0) {
                         started = false;
                         stage = "breathIn";
+                        rt.localRotation = new Quaternion(OldRotation.x, OldRotation.y, OldRotation.z - 90, OldRotation.w);
+                        OldRotation = rt.localRotation;
                     }
                 }
                 else {
                     currentTimer = delay;
                     started = true;
-                    print(stage);
                 }
 
                 break;
@@ -132,16 +138,18 @@ public class BreathingVis : MonoBehaviour
 
     void SetBreathingVis()
     {
+        
+
         if (stage == "breathIn") {
+            rt.Rotate(0, 0, (45 / breathInTime) * Time.deltaTime);
             rtL.localPosition = new Vector3(((1 - (currentTimer / breathInTime)) * (maxDist-minDist) + minDist) * -1, 0, rtL.localPosition.z);
             rtR.localPosition = new Vector3(((1 - (currentTimer / breathInTime)) * (maxDist - minDist) + minDist), 0, rtL.localPosition.z);
         }
         else if (stage == "breathOut") {
+            rt.Rotate(0, 0, (45 / breathOutTime) * Time.deltaTime);
             rtL.localPosition = new Vector3((((currentTimer / breathOutTime)) * (maxDist - minDist) + minDist) * -1, 0, rtL.localPosition.z);
             rtR.localPosition = new Vector3((((currentTimer / breathOutTime)) * (maxDist - minDist) + minDist), 0, rtL.localPosition.z);
         }
+
     }
-
-
-    //set breath pos rtL.localPosition = new Vector3(-50, 0, 125.2f);
 }
