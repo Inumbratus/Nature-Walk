@@ -809,7 +809,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: -5.2424954e-22, z: 9.4e-43, w: -5.192986e-22}
+  m_BoundingSphereOverride: {x: 0, y: 1.5e-44, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1520,7 +1520,7 @@ RectTransform:
   m_LocalRotation: {x: -0.054578163, y: -0.000000029802319, z: -0.00000001862645,
     w: 0.9985095}
   m_LocalPosition: {x: 0, y: 0, z: 0.024513245}
-  m_LocalScale: {x: 3.2223, y: 3.2223, z: 3.2223}
+  m_LocalScale: {x: 3.2223, y: 3.2223, z: 1}
   m_Children: []
   m_Father: {fileID: 1732521626}
   m_RootOrder: 0
@@ -1544,6 +1544,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDist: 5
   maxDist: 100
+  breathInSizeMulti: 1.1
+  breathOutSizeMulti: 0.7
   VisL: {fileID: 426528737}
   VisR: {fileID: 543069819}
   breathInSound: {fileID: 8300000, guid: b99b7e86195493749b7c067cdda10569, type: 3}

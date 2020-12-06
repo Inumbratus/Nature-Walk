@@ -8,6 +8,10 @@ public class BreathingVis : MonoBehaviour
     public float minDist;
     public float maxDist;
 
+    public float breathInSizeMulti;
+    public float breathOutSizeMulti;
+
+
     public GameObject VisL;
     public GameObject VisR;
 
@@ -15,7 +19,9 @@ public class BreathingVis : MonoBehaviour
     private RectTransform rtR;
     private RectTransform rt;
 
-    private Quaternion OldRotation;
+    private Quaternion oldRotation;
+
+    private Vector3 startScale;
 
 
     // Breathing Sound
@@ -40,8 +46,8 @@ public class BreathingVis : MonoBehaviour
         rtL = VisL.GetComponent<RectTransform>();
         rtR = VisR.GetComponent<RectTransform>();
         rt = gameObject.GetComponent<RectTransform>();
-        OldRotation = rt.localRotation;
-
+        oldRotation = rt.localRotation;
+        startScale = rt.localScale;
 
         if (gameObject.GetComponent<AudioSource>()) {
             audioSource = gameObject.GetComponent<AudioSource>();
@@ -123,8 +129,8 @@ public class BreathingVis : MonoBehaviour
                     if (currentTimer <= 0) {
                         started = false;
                         stage = "breathIn";
-                        rt.localRotation = new Quaternion(OldRotation.x, OldRotation.y, OldRotation.z - 90, OldRotation.w);
-                        OldRotation = rt.localRotation;
+                        rt.localRotation = new Quaternion(oldRotation.x, oldRotation.y, oldRotation.z - 90, oldRotation.w);
+                        oldRotation = rt.localRotation;
                     }
                 }
                 else {
@@ -141,15 +147,23 @@ public class BreathingVis : MonoBehaviour
         
 
         if (stage == "breathIn") {
+            // Rotate Center
             rt.Rotate(0, 0, (45 / breathInTime) * Time.deltaTime);
-            rtL.localPosition = new Vector3(((1 - (currentTimer / breathInTime)) * (maxDist-minDist) + minDist) * -1, 0, rtL.localPosition.z);
+            // Rescale Center
+            rt.localScale = new Vector3((1 - (currentTimer / breathInTime)) * (breathInSizeMulti * startScale.x - startScale.x * breathOutSizeMulti) + startScale.x * breathOutSizeMulti, (1 - (currentTimer / breathInTime)) * (breathInSizeMulti * startScale.y - startScale.y * breathOutSizeMulti) + startScale.y * breathOutSizeMulti, 1);
+            // Move Outter Pieces
+            rtL.localPosition = new Vector3(((1 - (currentTimer / breathInTime)) * (maxDist - minDist) + minDist) * -1, 0, rtL.localPosition.z);
             rtR.localPosition = new Vector3(((1 - (currentTimer / breathInTime)) * (maxDist - minDist) + minDist), 0, rtL.localPosition.z);
         }
         else if (stage == "breathOut") {
+            // Rotate Center
             rt.Rotate(0, 0, (45 / breathOutTime) * Time.deltaTime);
+            // Rescale Center
+            rt.localScale = new Vector3((1 - (currentTimer / breathOutTime)) * (breathOutSizeMulti * startScale.x - startScale.x * breathInSizeMulti) + startScale.x * breathInSizeMulti, (1 - (currentTimer / breathOutTime)) * (breathOutSizeMulti * startScale.y - startScale.y * breathInSizeMulti) + startScale.y * breathInSizeMulti, 1);
+            // Move Outter Pieces
             rtL.localPosition = new Vector3((((currentTimer / breathOutTime)) * (maxDist - minDist) + minDist) * -1, 0, rtL.localPosition.z);
             rtR.localPosition = new Vector3((((currentTimer / breathOutTime)) * (maxDist - minDist) + minDist), 0, rtL.localPosition.z);
         }
-
+        
     }
 }
